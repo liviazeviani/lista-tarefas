@@ -16,6 +16,14 @@ public class Todo {
     private String description;
     private boolean realized;
     private int priorization;
+
+   
+    public Todo(String name, String description, boolean realized, int priorization) {
+        this.name = name;
+        this.description = description;
+        this.realized = realized;
+        this.priorization = priorization;
+    }
     
     public Long getId() {
         return id;
