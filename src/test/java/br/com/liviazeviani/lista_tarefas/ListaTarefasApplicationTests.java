@@ -1,5 +1,7 @@
 package br.com.liviazeviani.lista_tarefas;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,5 +48,33 @@ class ListaTarefasApplicationTests {
 			.expectStatus().isBadRequest();
 
 	}
+
+	@Test
+void testDeleteTodoSuccess() {
+    
+    Todo todo = new Todo("name", "description", false, 5);
+
+    Todo createdTodo = webTestClient.post()
+            .uri("/todos")
+            .bodyValue(todo)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody(Todo.class)
+            .returnResult().getResponseBody();
+
+    assertNotNull(createdTodo);
+    Long todoId = createdTodo.getId();
+    assertNotNull(todoId);
+
+    webTestClient.delete()
+            .uri("/todos/{id}", todoId)
+            .exchange()
+            .expectStatus().isOk();
+
+    webTestClient.get()
+            .uri("/todos/{id}", todoId)
+            .exchange()
+            .expectStatus().isNotFound();
+}
 
 }
